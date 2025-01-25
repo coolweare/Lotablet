@@ -46,38 +46,40 @@ class ImageGalleryApp:
         self.root.grid_rowconfigure(1, weight=1)
         self.root.grid_columnconfigure(0, weight=1)
 
+        # Load button images
+        self.home_icon = self.load_icon("/home/ubuntu/lotab/img/buttons/home_icon.jpeg")  # Replace with your home icon path
+        self.yes_icon = self.load_icon("/home/ubuntu/lotab/img/buttons/yes_icon.png")    # Replace with your yes icon path
+        self.no_icon = self.load_icon("/home/ubuntu/lotab/img/buttons/no_icon.jpeg")      # Replace with your no icon path
+        self.sms_icon = self.load_icon("/home/ubuntu/lotab/img/buttons/sms_icon.png")    # Replace with your SMS icon path
+        self.sick_icon = self.load_icon("/home/ubuntu/lotab/img/buttons/sick_icon.jpeg")  # Replace with your sick icon path
+
         # Navigation buttons
         self.home_button = tk.Button(
-            self.nav_frame, text="Home", command=self.load_main_folder,
+            self.nav_frame, image=self.home_icon, command=self.load_main_folder,
             bg="#4CAF50", fg="white", font=("Arial", 12, "bold"), padx=10, pady=5
         )
         self.home_button.grid(row=0, column=0, padx=10)
 
         self.yes_button = tk.Button(
-            self.nav_frame, text="Yes", command=self.on_yes_clicked,
+            self.nav_frame, image=self.yes_icon, command=self.on_yes_clicked,
             bg="#4CAF50", fg="white", font=("Arial", 12, "bold"), padx=10, pady=5
         )
         self.yes_button.grid(row=0, column=1, padx=10)
 
         self.no_button = tk.Button(
-            self.nav_frame, text="No", command=self.on_no_clicked,
+            self.nav_frame, image=self.no_icon, command=self.on_no_clicked,
             bg="#F44336", fg="white", font=("Arial", 12, "bold"), padx=10, pady=5
         )
         self.no_button.grid(row=0, column=2, padx=10)
 
-        sick_icon_path = "/home/ubuntu/lotab/sickbutton/sick.jpeg"  # Replace with your icon image
-        sick_icon = Image.open(sick_icon_path)
-        sick_icon.thumbnail((50, 50))  # Resize the icon
-        self.sick_icon_img = ImageTk.PhotoImage(sick_icon)
-
         self.sick_button = tk.Button(
-            self.nav_frame, image=self.sick_icon_img, command=self.load_sick_folder,
+            self.nav_frame, image=self.sick_icon, command=self.load_sick_folder,
             bg="#2196F3", padx=10, pady=5
         )
         self.sick_button.grid(row=0, column=3, padx=10)
 
         self.sms_button = tk.Button(
-            self.nav_frame, text="Send SMS", command=self.send_sms,
+            self.nav_frame, image=self.sms_icon, command=self.send_sms,
             bg="#FF9800", fg="white", font=("Arial", 12, "bold"), padx=10, pady=5
         )
         self.sms_button.grid(row=0, column=4, padx=10)
@@ -94,6 +96,16 @@ class ImageGalleryApp:
 
         # Load main folder on startup
         self.load_main_folder()
+
+    def load_icon(self, path):
+        """Load an image for a button."""
+        try:
+            icon = Image.open(path)
+            icon.thumbnail((50, 50))  # Resize to fit button
+            return ImageTk.PhotoImage(icon)
+        except Exception as e:
+            print(f"Error loading icon from {path}: {e}")
+            return None
 
     def load_folder(self, folder_path):
         self.current_folder = folder_path  # Update current folder
@@ -163,7 +175,7 @@ class ImageGalleryApp:
         if self.current_folder == self.sick_folder:
             speech_text = f"MY {image_name} hurts"
         else:
-            speech_text = f"Please {image_name}"
+            speech_text = f"Please can I have a {image_name}"
 
         self.speak(speech_text)
 
