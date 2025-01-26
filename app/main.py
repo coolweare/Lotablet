@@ -176,7 +176,7 @@ class ImageGalleryApp:
         if self.current_folder == self.sick_folder:
             speech_text = f"MY {image_name} hurts"
         else:
-            speech_text = f"Please can I have a {image_name}"
+            speech_text = f"Please {image_name}"
 
         print(f"Speaking: {speech_text}")  # Debug: Print the speech text
         self.speak(speech_text)
@@ -184,7 +184,7 @@ class ImageGalleryApp:
     def preprocess_text(self, text):
         # Replace problematic words with synonyms or phonetic spellings
         substitutions = {
-            "bath": "Take a Bath",  # Synonym
+            #"bath": "Take a Bath",  # Synonym
             "water": "waw-ter",  # Phonetic spelling
         }
         for word, replacement in substitutions.items():
