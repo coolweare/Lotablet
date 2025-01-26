@@ -170,6 +170,7 @@ class ImageGalleryApp:
     def speak_image_name(self, file_path):
         # Extract the image name
         image_name = os.path.splitext(os.path.basename(file_path))[0]
+        print(f"Image Name: {image_name}")  # Debug: Print the image name
 
         # Custom speech output based on folder
         if self.current_folder == self.sick_folder:
@@ -177,18 +178,33 @@ class ImageGalleryApp:
         else:
             speech_text = f"Please can I have a {image_name}"
 
+        print(f"Speaking: {speech_text}")  # Debug: Print the speech text
         self.speak(speech_text)
 
+    def preprocess_text(self, text):
+        # Replace problematic words with synonyms or phonetic spellings
+        substitutions = {
+            "bath": "Take a Bath",  # Synonym
+            "water": "waw-ter",  # Phonetic spelling
+        }
+        for word, replacement in substitutions.items():
+            text = text.replace(word, replacement)
+        return text
+
     def speak(self, text):
-        # Use a separate thread for speech to avoid blocking the GUI
+        # Preprocess text before speaking
+        text = self.preprocess_text(text)
         threading.Thread(target=self._speak, args=(text,)).start()
 
     def _speak(self, text):
         try:
+            print(f"Speaking (processed): {text}")
             self.engine.say(text)
             self.engine.runAndWait()
         except Exception as e:
             print(f"Error in speech synthesis: {e}")
+            messagebox.showerror("Speech Error", f"Could not say: {text}")
+
 
     def send_sms(self):
         # Send an SMS using Twilio
